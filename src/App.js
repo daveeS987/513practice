@@ -42,6 +42,18 @@ function App() {
   const [open, setOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
 
+  const handleLogin = (e) => {
+    e.preventDefault();
+    auth.signInWithEmailAndPassword(email, password).catch((error) => alert(error.message));
+    setOpen(false);
+  };
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+    auth.createUserWithEmailAndPassword(email, password).catch((error) => alert(error.message));
+    setRegisterOpen(false);
+  };
+
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
@@ -71,20 +83,6 @@ function App() {
       .orderBy('timestamp', 'desc')
       .onSnapshot((snapshot) => setPosts(snapshot.docs.map((doc) => ({ id: doc.id, post: doc.data() }))));
   }, []);
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    auth.signInWithEmailAndPassword(email, password).catch((error) => alert(error.message));
-
-    setOpen(false);
-  };
-
-  const handleRegister = (e) => {
-    e.preventDefault();
-    auth.createUserWithEmailAndPassword(email, password).catch((error) => alert(error.message));
-
-    setRegisterOpen(false);
-  };
 
   return (
     <div className='app'>
