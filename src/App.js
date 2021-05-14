@@ -6,6 +6,9 @@ import { db, auth } from './firebase';
 import { Button, Avatar, makeStyles, Modal, Input } from '@material-ui/core';
 import FlipMove from 'react-flip-move';
 import InstagramEmbed from 'react-instagram-embed';
+import Pusher from 'pusher-js';
+
+import axios from './axios.js';
 
 function getModalStyle() {
   const top = 50;
@@ -78,10 +81,26 @@ function App() {
     };
   }, [user, username]);
 
+  const fetchPosts = async () =>
+    await axios.get('/sync').then((response) => {
+      setPosts(response.data);
+    });
+
   useEffect(() => {
-    db.collection('posts')
-      .orderBy('timestamp', 'desc')
-      .onSnapshot((snapshot) => setPosts(snapshot.docs.map((doc) => ({ id: doc.id, post: doc.data() }))));
+    const pusher = new Pusher('da2ec1cce9c3a1c021c7', {
+      cluster: 'us2',
+    });
+
+    const channel = pusher.subscribe('posts');
+    channel.bind('inserted', (data) => {
+      console.log('🚀 ~ file: App.js ~ line 95 ~ channel.bind ~ data', data);
+
+      fetchPosts();
+    });
+  });
+
+  useEffect(() => {
+    fetchPosts();
   }, []);
 
   return (
@@ -132,8 +151,8 @@ function App() {
       <div className='app__posts'>
         <div className='app__postsLeft'>
           <FlipMove>
-            {posts.map(({ id, post }) => (
-              <Post user={user} key={id} postId={id} username={post.username} caption={post.caption} imageUrl={post.imageUrl} />
+            {posts.map((post) => (
+              <Post user={user} key={post._id} postId={post._id} username={post.user} caption={post.caption} imageUrl={post.image} />
             ))}
           </FlipMove>
         </div>
