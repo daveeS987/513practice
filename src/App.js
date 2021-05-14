@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
-import Post from './Post/Post.js';
-import ImageUpload from './ImageUpload/ImageUpload.js';
-import { db, auth } from './firebase';
+import { auth } from './firebase';
 import { Button, Avatar, makeStyles, Modal, Input } from '@material-ui/core';
 import FlipMove from 'react-flip-move';
-import InstagramEmbed from 'react-instagram-embed';
 import Pusher from 'pusher-js';
 
+import './App.css';
 import axios from './axios.js';
+import Post from './Post/Post.js';
+import ImageUpload from './ImageUpload/ImageUpload.js';
 
 function getModalStyle() {
   const top = 50;
@@ -60,13 +59,10 @@ function App() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
-        // user is logged in...
-        console.log(authUser);
+        console.log('🚀 ~ file: App.js ~ line 63 ~ unsubscribe ~ authUser', authUser);
         setUser(authUser);
 
-        if (authUser.displayName) {
-          // dont update username
-        } else {
+        if (!authUser.displayName) {
           return authUser.updateProfile({
             displayName: username,
           });
@@ -97,7 +93,7 @@ function App() {
 
       fetchPosts();
     });
-  });
+  }, []);
 
   useEffect(() => {
     fetchPosts();
@@ -155,9 +151,6 @@ function App() {
               <Post user={user} key={post._id} postId={post._id} username={post.user} caption={post.caption} imageUrl={post.image} />
             ))}
           </FlipMove>
-        </div>
-        <div className='app__postsRight'>
-          <InstagramEmbed url='https://www.instagram.com/p/B_uf9dmAGPw/' maxWidth={320} hideCaption={false} containerTagName='div' protocol='' injectScript onLoading={() => {}} onSuccess={() => {}} onAfterRender={() => {}} onFailure={() => {}} />
         </div>
       </div>
 
