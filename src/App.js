@@ -59,7 +59,7 @@ function App() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
-        console.log('🚀 ~ file: App.js ~ line 63 ~ unsubscribe ~ authUser', authUser);
+        console.log('A NEW USER DETECTED:', authUser);
         setUser(authUser);
 
         if (!authUser.displayName) {
@@ -89,7 +89,7 @@ function App() {
 
     const channel = pusher.subscribe('posts');
     channel.bind('inserted', (data) => {
-      console.log('🚀 ~ file: App.js ~ line 95 ~ channel.bind ~ data', data);
+      console.log('Insert was triggered: ', data);
 
       fetchPosts();
     });

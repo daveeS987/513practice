@@ -8,6 +8,7 @@ const Post = forwardRef(({ user, username, postId, imageUrl, caption }, ref) => 
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState('');
 
+  /*
   useEffect(() => {
     let unsubscribe;
     if (postId) {
@@ -25,13 +26,15 @@ const Post = forwardRef(({ user, username, postId, imageUrl, caption }, ref) => 
     };
   }, [postId]);
 
+  */
+
   const postComment = (e) => {
     e.preventDefault();
 
-    db.collection('posts').doc(postId).collection('comments').add({
-      text: comment,
-      username: user.displayName,
-    });
+    // db.collection('posts').doc(postId).collection('comments').add({
+    //   text: comment,
+    //   username: user.displayName,
+    // });
     setComment('');
   };
 

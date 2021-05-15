@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import firebase from 'firebase';
-import { storage, db } from '../firebase';
-import './ImageUpload.css';
 import { Input, Button } from '@material-ui/core';
+
+import { storage } from '../firebase.js';
 import axios from '../axios.js';
+import './ImageUpload.css';
 
 const ImageUpload = ({ username }) => {
   const [image, setImage] = useState(null);
