@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { auth } from './firebase';
 import { Button, Avatar, makeStyles, Modal, Input } from '@material-ui/core';
 import FlipMove from 'react-flip-move';
-// import Pusher from 'pusher-js';
+import Pusher from 'pusher-js';
 
 import './App.css';
 import axios from './axios.js';
@@ -57,11 +57,10 @@ function App() {
   };
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+    const checkUser = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
         // console.log('A NEW USER DETECTED:', authUser);
         setUser(authUser);
-
         if (!authUser.displayName) {
           return authUser.updateProfile({
             displayName: username,
@@ -73,32 +72,29 @@ function App() {
     });
 
     return () => {
-      unsubscribe();
+      checkUser();
     };
   }, [user, username]);
 
-  const fetchPosts = async () =>
-    await axios.get('/instagramPost').then((response) => {
-      setPosts(response.data.results);
-    });
+  async function getAllPosts() {
+    let allPosts = await axios.get('/instagramPost');
+    setPosts(allPosts.data.results);
+  }
 
-  /*
   useEffect(() => {
     const pusher = new Pusher('da2ec1cce9c3a1c021c7', {
       cluster: 'us2',
     });
 
-    const channel = pusher.subscribe('posts');
+    const channel = pusher.subscribe('instagramposts');
     channel.bind('inserted', (data) => {
       console.log('Insert was triggered: ', data);
-
-      fetchPosts();
+      getAllPosts();
     });
   }, []);
-  */
 
   useEffect(() => {
-    fetchPosts();
+    getAllPosts();
   }, []);
 
   return (
@@ -150,7 +146,7 @@ function App() {
         <div className='app__postsLeft'>
           <FlipMove>
             {posts.map((post) => (
-              <Post user={user} key={post._id} postId={post._id} username={post.user} caption={post.caption} imageUrl={post.image} />
+              <Post user={user} key={post._id} postId={post._id} username={post.user} caption={post.caption} image={post.image} comments={post.comments} />
             ))}
           </FlipMove>
         </div>

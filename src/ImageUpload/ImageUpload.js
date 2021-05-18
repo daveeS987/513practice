@@ -7,7 +7,6 @@ import './ImageUpload.css';
 
 const ImageUpload = ({ username }) => {
   const [image, setImage] = useState(null);
-  const [url, setUrl] = useState('');
   const [progress, setProgress] = useState(0);
   const [caption, setCaption] = useState('');
 
@@ -22,37 +21,23 @@ const ImageUpload = ({ username }) => {
     uploadTask.on(
       'state_changed',
       (snapshot) => {
-        // progress function ...
         const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
         setProgress(progress);
       },
       (error) => {
-        // Error function ...
         console.log(error);
       },
       () => {
-        // complete function ...
         storage
           .ref('images')
           .child(image.name)
           .getDownloadURL()
           .then((url) => {
-            setUrl(url);
-
-            console.log('URL from uploading: ', url);
             axios.post('/instagramPost', {
               caption: caption,
               user: username,
               image: url,
             });
-
-            // post image inside db
-            // db.collection('posts').add({
-            //   imageUrl: url,
-            //   caption: caption,
-            //   username: username,
-            //   timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            // });
 
             setProgress(0);
             setCaption('');

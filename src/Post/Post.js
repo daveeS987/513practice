@@ -1,50 +1,46 @@
-import React, { useState, useEffect, forwardRef } from 'react';
-import './Post.css';
+import React, { useState, useEffect } from 'react';
 import Avatar from '@material-ui/core/Avatar';
-import { db } from '../firebase';
 
-const Post = forwardRef(({ user, username, postId, imageUrl, caption }, ref) => {
-  const [comments, setComments] = useState([]);
+import axios from '../axios.js';
+import './Post.css';
+
+function Post({ user, username, postId, image, caption, comments }) {
+  const [commentsArray, setCommentsArray] = useState([]);
   const [comment, setComment] = useState('');
 
-  /*
   useEffect(() => {
-    let unsubscribe;
-    if (postId) {
-      unsubscribe = db
-        .collection('posts')
-        .doc(postId)
-        .collection('comments')
-        .onSnapshot((snapshot) => {
-          setComments(snapshot.docs.map((doc) => doc.data()));
-        });
-    }
+    setCommentsArray(comments);
+  }, []);
 
-    return () => {
-      unsubscribe();
-    };
-  }, [postId]);
-
-  */
-
-  const postComment = (e) => {
+  const postComment = async (e) => {
     e.preventDefault();
 
-    // db.collection('posts').doc(postId).collection('comments').add({
-    //   text: comment,
-    //   username: user.displayName,
-    // });
-    setComment('');
+    let newCommment = {
+      username,
+      text: comment,
+    };
+
+    await axios
+      .put(`/instagramPost/${postId}`, {
+        caption,
+        user: username,
+        image,
+        comments: [...commentsArray, newCommment],
+      })
+      .then((result) => {
+        setCommentsArray([...commentsArray, newCommment]);
+        setComment('');
+      });
   };
 
   return (
-    <div className='post' ref={ref}>
+    <div className='post'>
       <div className='post__header'>
         <Avatar className='post__avatar' alt={username} src='/static/images/avatar/1.jpg' />
         <h3>{username}</h3>
       </div>
 
-      <img className='post__image' src={imageUrl} alt='post' />
+      <img className='post__image' src={image} alt='post' />
       <h4 className='post__text'>
         {username} <span className='post__caption'>{caption}</span>
       </h4>
@@ -67,6 +63,6 @@ const Post = forwardRef(({ user, username, postId, imageUrl, caption }, ref) => 
       )}
     </div>
   );
-});
+}
 
 export default Post;
