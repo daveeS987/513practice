@@ -39,7 +39,8 @@ const ImageUpload = ({ username }) => {
           .then((url) => {
             setUrl(url);
 
-            axios.post('/upload', {
+            console.log('URL from uploading: ', url);
+            axios.post('/instagramPost', {
               caption: caption,
               user: username,
               image: url,

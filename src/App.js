@@ -59,7 +59,7 @@ function App() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
-        console.log('A NEW USER DETECTED:', authUser);
+        // console.log('A NEW USER DETECTED:', authUser);
         setUser(authUser);
 
         if (!authUser.displayName) {
@@ -78,7 +78,7 @@ function App() {
   }, [user, username]);
 
   const fetchPosts = async () =>
-    await axios.get('/sync').then((response) => {
+    await axios.get('/instagramPost').then((response) => {
       setPosts(response.data);
     });
 
