@@ -46,13 +46,21 @@ function App() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    auth.signInWithEmailAndPassword(email, password).catch((error) => alert(error.message));
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .catch((error) => alert(error.message));
     setOpen(false);
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    auth.createUserWithEmailAndPassword(email, password).catch((error) => alert(error.message));
+    await auth
+      .createUserWithEmailAndPassword(email, password)
+      .catch((error) => alert(error.message));
+    await auth
+      .signInWithEmailAndPassword(email, password)
+      .catch((error) => alert(error.message));
+    setOpen(false);
     setRegisterOpen(false);
   };
 
@@ -98,16 +106,30 @@ function App() {
   }, []);
 
   return (
-    <div className='app'>
+    <div className="app">
       <Modal open={open} onClose={() => setOpen(false)}>
         <div style={modalStyle} className={classes.paper}>
-          <form className='app__login'>
+          <form className="app__login">
             <center>
-              <img className='app__headerImage' src='https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png' alt='' />
+              <img
+                className="app__headerImage"
+                src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
+                alt=""
+              />
             </center>
 
-            <Input placeholder='email' type='text' value={email} onChange={(e) => setEmail(e.target.value)} />
-            <Input placeholder='password' type='password' value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input
+              placeholder="email"
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Input
+              placeholder="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
             <Button onClick={handleLogin}>Login</Button>
           </form>
         </div>
@@ -115,45 +137,80 @@ function App() {
 
       <Modal open={registerOpen} onClose={() => setRegisterOpen(false)}>
         <div style={modalStyle} className={classes.paper}>
-          <form className='app__login'>
+          <form className="app__login">
             <center>
-              <img className='app__headerImage' src='https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png' alt='' />
+              <img
+                className="app__headerImage"
+                src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
+                alt=""
+              />
             </center>
-            <Input type='text' placeholder='username' value={username} onChange={(e) => setUsername(e.target.value)} />
-            <Input placeholder='email' type='text' value={email} onChange={(e) => setEmail(e.target.value)} />
-            <Input placeholder='password' type='password' value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input
+              type="text"
+              placeholder="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+            <Input
+              placeholder="email"
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Input
+              placeholder="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
             <Button onClick={handleRegister}>Register</Button>
           </form>
         </div>
       </Modal>
 
-      <div className='app__header'>
-        <img className='app__headerImage' src='https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png' alt='' />
+      <div className="app__header">
+        <img
+          className="app__headerImage"
+          src="https://www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
+          alt=""
+        />
         {user?.displayName ? (
-          <div className='app__headerRight'>
+          <div className="app__headerRight">
             <Button onClick={() => auth.signOut()}>Logout</Button>
-            <Avatar className='app__headerAvatar' alt={user.displayName} src='/static/images/avatar/1.jpg' />
+            <Avatar
+              className="app__headerAvatar"
+              alt={user.displayName}
+              src="/static/images/avatar/1.jpg"
+            />
           </div>
         ) : (
-          <form className='app__loginHome'>
+          <form className="app__loginHome">
             <Button onClick={() => setOpen(true)}>Login</Button>
             <Button onClick={() => setRegisterOpen(true)}>Sign Up</Button>
           </form>
         )}
       </div>
 
-      <div className='app__posts'>
-        <div className='app__postsLeft'>
+      <div className="app__posts">
+        <div className="app__postsLeft">
           <FlipMove>
             {posts.map((post) => (
-              <Post user={user} key={post._id} postId={post._id} username={post.user} caption={post.caption} image={post.image} comments={post.comments} />
+              <Post
+                user={user}
+                key={post._id}
+                postId={post._id}
+                username={post.user}
+                caption={post.caption}
+                image={post.image}
+                comments={post.comments}
+              />
             ))}
           </FlipMove>
         </div>
       </div>
 
       {user?.displayName ? (
-        <div className='app__upload'>
+        <div className="app__upload">
           <ImageUpload username={user.displayName} />
         </div>
       ) : (

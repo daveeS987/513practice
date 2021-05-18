@@ -21,7 +21,9 @@ const ImageUpload = ({ username }) => {
     uploadTask.on(
       'state_changed',
       (snapshot) => {
-        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+        const progress = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
         setProgress(progress);
       },
       (error) => {
@@ -48,12 +50,16 @@ const ImageUpload = ({ username }) => {
   };
 
   return (
-    <div className='imageupload'>
-      <progress className='imageupload__progress' value={progress} max='100' />
-      <Input placeholder='Enter a caption' value={caption} onChange={(e) => setCaption(e.target.value)} />
+    <div className="imageupload">
+      <progress className="imageupload__progress" value={progress} max="100" />
+      <Input
+        placeholder="Enter a caption"
+        value={caption}
+        onChange={(e) => setCaption(e.target.value)}
+      />
       <div>
-        <input type='file' onChange={handleChange} />
-        <Button className='imageupload__button' onClick={handleUpload}>
+        <input type="file" onChange={handleChange} />
+        <Button className="imageupload__button" onClick={handleUpload}>
           Upload
         </Button>
       </div>
