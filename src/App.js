@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { auth } from './firebase';
 import { Button, Avatar, makeStyles, Modal, Input } from '@material-ui/core';
 import FlipMove from 'react-flip-move';
-import Pusher from 'pusher-js';
+// import Pusher from 'pusher-js';
 
 import './App.css';
 import axios from './axios.js';
@@ -79,9 +79,10 @@ function App() {
 
   const fetchPosts = async () =>
     await axios.get('/instagramPost').then((response) => {
-      setPosts(response.data);
+      setPosts(response.data.results);
     });
 
+  /*
   useEffect(() => {
     const pusher = new Pusher('da2ec1cce9c3a1c021c7', {
       cluster: 'us2',
@@ -94,6 +95,7 @@ function App() {
       fetchPosts();
     });
   }, []);
+  */
 
   useEffect(() => {
     fetchPosts();
