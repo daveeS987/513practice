@@ -96,7 +96,6 @@ function App() {
 
     const channel = pusher.subscribe('instagramposts');
     channel.bind('inserted', (data) => {
-      console.log('Insert was triggered: ', data);
       getAllPosts();
     });
   }, []);
